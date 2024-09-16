@@ -1,0 +1,16 @@
+# Symfony
+/var/
+/vendor/
+.env
+.env.local
+/.idea
+/public/build/
+/node_modules/
+
+# Node
+node_modules/
+dist/
+
+# MAMP, PHPStorm, etc.
+/.idea/
+/.DS_Store
