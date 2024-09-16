@@ -9,7 +9,7 @@
         {% endblock %}
     </head>
     <body>
-        <div id="app"></div>  <!-- Vue.js sera monté ici -->
+        <div id="app" data-movies="{{ movies|json_encode }}"></div>
 
         {% block javascripts %}
             {{ encore_entry_script_tags('app') }}
