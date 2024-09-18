@@ -26,7 +26,7 @@ class HomeController extends AbstractController
         $tmdbApiKey = $this->params->get('tmdb_api_key');
 
         // Faire une requête à l'API TMDB pour obtenir les films populaires
-        $response = $this->httpClient->request('GET', 'https://api.themoviedb.org/3/movie/popular', [
+        $popularMovies = $this->httpClient->request('GET', 'https://api.themoviedb.org/3/movie/popular', [
             'query' => [
                 'api_key' => $tmdbApiKey,
                 'language' => 'fr-FR',
@@ -34,11 +34,13 @@ class HomeController extends AbstractController
             ]
         ]);
 
+
+
         // Convertir la réponse JSON en tableau PHP
-        $movies = $response->toArray();
+        $movies = $popularMovies->toArray();
 
         // Rendre la vue Twig avec les films populaires
-        return $this->render('base.html.twig', [
+        return $this->render('home.html.twig', [
             'movies' => $movies['results'], // Passer les films à la vue
         ]);
     }
