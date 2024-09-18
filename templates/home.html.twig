@@ -1,8 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <div id="home-app" data-movies="{{ movies|json_encode }}"></div>
+    <div id="home-app" data-popular-movies="{{ movies|json_encode }}" data-now-playing-movies="{{ nowPlayingMovies|json_encode }}"></div>
       {{ encore_entry_script_tags('app') }}
-
 {% endblock %}
 

@@ -33,15 +33,22 @@ class HomeController extends AbstractController
                 'page' => 1
             ]
         ]);
-
-
+        $nowPlayingMovies = $this->httpClient->request('GET', 'https://api.themoviedb.org/3/movie/now_playing', [
+            'query' => [
+                'api_key' => $tmdbApiKey,
+                'language' => 'fr-FR',
+            ]
+        ]);
 
         // Convertir la réponse JSON en tableau PHP
-        $movies = $popularMovies->toArray();
+        $popularMoviesArray = $popularMovies->toArray();
+        $nowPlayingMoviesArray = $nowPlayingMovies->toArray();
+
 
         // Rendre la vue Twig avec les films populaires
         return $this->render('home.html.twig', [
-            'movies' => $movies['results'], // Passer les films à la vue
+            'movies' => $popularMoviesArray['results'],
+            'nowPlayingMovies' => $nowPlayingMoviesArray['results'],
         ]);
     }
 }
