@@ -31,14 +31,28 @@ class FilmController extends AbstractController
             ]
         ]);
 
+        $creditResponse = $this->httpClient->request('GET', "https://api.themoviedb.org/3/movie/{$id}/credits", [
+            'query' => [
+                'api_key' => $tmdbApiKey,
+                'language' => 'fr-FR',
+            ]
+        ]);
+
         if ($response->getStatusCode() !== 200) {
             throw $this->createNotFoundException('Film non trouvé');
         }
 
+        if ($creditResponse->getStatusCode() !== 200) {
+            throw $this->createNotFoundException('credits non trouvé');
+        }
+
         $film = $response->toArray();
+        $credits = $creditResponse->toArray();
 
         return $this->render('film/index.html.twig', [
             'film' => $film,
+            'credits' => $credits,
+
         ]);
     }
 }
