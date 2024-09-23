@@ -1,0 +1,6 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div id="film-app" data-film="{{ film|json_encode }}" data-credits="{{ credits|json_encode }}"></div>   
+    {{ encore_entry_script_tags('app') }}
+{% endblock %}
