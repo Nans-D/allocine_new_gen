@@ -44,7 +44,6 @@ class HomeController extends AbstractController
         $popularMoviesArray = $popularMovies->toArray();
         $nowPlayingMoviesArray = $nowPlayingMovies->toArray();
 
-
         // Rendre la vue Twig avec les films populaires
         return $this->render('home.html.twig', [
             'movies' => $popularMoviesArray['results'],

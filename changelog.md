@@ -2,6 +2,8 @@
 
 - Ajout de la route /film/{id}
 - Ajout de la page de film
+- Ajout des casts sur la page film
+- Ajout des notes sur la page film
 
 ## WAP-02
 

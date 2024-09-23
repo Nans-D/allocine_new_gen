@@ -49,6 +49,8 @@ class FilmController extends AbstractController
         $film = $response->toArray();
         $credits = $creditResponse->toArray();
 
+        // dd($film);
+
         return $this->render('film/index.html.twig', [
             'film' => $film,
             'credits' => $credits,
