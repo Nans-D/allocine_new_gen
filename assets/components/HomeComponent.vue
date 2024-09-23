@@ -18,7 +18,7 @@
         <div class="col-6 d-flex justify-content-end align-items-center">
           <ul class="d-flex list-unstyled gap-3 m-0">
             <li>Séries</li>
-            <li>Films</li>
+            <li @click="goToAllMovies()">Films</li>
             <li>Moods</li>
             <li><a :href="loginUrl">Se connecter</a></li>
           </ul>
@@ -141,6 +141,10 @@ onMounted(() => {
 
 const goToFilm = (movieId) => {
   window.location.href = `/film/${movieId}`; // Redirige vers la route Symfony
+};
+
+const goToAllMovies = () => {
+  window.location.href = `/all/movies`; // Redirige vers la route Symfony
 };
 
 const searchMovies = () => {

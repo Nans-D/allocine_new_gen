@@ -1,3 +1,9 @@
+## WAP-04
+
+- Pages séries / films
+- Pagination Films
+- Filter à mettre en place
+
 ## WAP-03
 
 - Ajout de la route /film/{id}
