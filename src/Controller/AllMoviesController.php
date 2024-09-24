@@ -21,23 +21,25 @@ class AllMoviesController extends AbstractController
         $this->params = $params;
     }
 
-    #[Route('/all/movies/{page?1}', name: 'app_all_movies')]
-    public function index(int $page, Request $request): Response
+    #[Route('/all/movies/{page?1}/{sort_by?null}', name: 'all_movies')]
+    public function index(string $sort_by, int $page, Request $request): Response
     {
         $tmdbApiKey = $this->params->get('tmdb_api_key');
 
         // Récupération du paramètre page à partir de la query string ou de l'URL
         $page = $request->query->getInt('page', $page);
+        $sortBy = $request->query->get('sort_by', $sort_by);
 
         // Appel API TMDB pour récupérer les films de la page spécifiée
         $responseAllMovies = $this->httpClient->request('GET', "https://api.themoviedb.org/3/discover/movie", [
             'query' => [
                 'api_key' => $tmdbApiKey,
-                'sort_by' => 'popularity.desc',
+                'sort_by' => $sortBy,
                 'page' => $page, // Utilisation de la page actuelle
             ]
         ]);
 
+        // dd($responseAllMovies);
         // Vérification du code de retour de l'API
         if ($responseAllMovies->getStatusCode() !== 200) {
             throw $this->createNotFoundException('Films non trouvés');

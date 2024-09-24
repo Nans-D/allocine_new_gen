@@ -12,15 +12,37 @@
                 v-model="searchQuery"
               />
             </div>
-            <button class="btn btn-primary col-auto">Rechercher</button>
+            <button class="btn col-auto" style="background-color: #e5484d">
+              Rechercher
+            </button>
           </div>
         </form>
         <div class="col-6 d-flex justify-content-end align-items-center">
           <ul class="d-flex list-unstyled gap-3 m-0">
-            <li>Séries</li>
-            <li @click="goToAllMovies()">Films</li>
-            <li>Moods</li>
-            <li><a :href="loginUrl">Se connecter</a></li>
+            <li>
+              <a
+                href="#"
+                class="link-light link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover"
+                >Séries</a
+              >
+            </li>
+            <li @click="goToAllMovies()">
+              <a
+                href="#"
+                class="link-light link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover"
+                >Films</a
+              >
+            </li>
+            <li>
+              <a
+                href="#"
+                class="link-light link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover"
+                >Moods</a
+              >
+            </li>
+            <li>
+              <a :href="loginUrl" style="cursor: pointer">Se connecter</a>
+            </li>
           </ul>
         </div>
       </header>

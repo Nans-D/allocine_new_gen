@@ -23,7 +23,7 @@
               alt="Poster du film"
               width="300vw"
               class="rounded"
-              style="box-shadow: 1px 1px 10px #000000"
+              style="box-shadow: 0px 0px 10px #000000"
             />
           </div>
           <div class="col-8">
@@ -124,7 +124,7 @@
                 width="200px"
                 style="
                   object-fit: cover;
-                  box-shadow: 5px 10px 10px rgba(0, 0, 0, 0.5);
+                  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
                 "
                 alt=""
               />
