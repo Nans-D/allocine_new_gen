@@ -21,26 +21,27 @@ class AllMoviesController extends AbstractController
         $this->params = $params;
     }
 
-    #[Route('/all/movies/{page?1}/{sort_by?null}', name: 'all_movies')]
-    public function index(string $sort_by, int $page, Request $request): Response
+    #[Route('/all/movies/{page?1}/{include_adult?false}/{sort_by?popularity.desc}', name: 'all_movies')]
+    public function index(string $sort_by, int $page, bool $include_adult, Request $request): Response
     {
         $tmdbApiKey = $this->params->get('tmdb_api_key');
 
         // Récupération du paramètre page à partir de la query string ou de l'URL
         $page = $request->query->getInt('page', $page);
+        $includeAdult = $request->query->getBoolean('include_adult', $include_adult);
         $sortBy = $request->query->get('sort_by', $sort_by);
         $voteAverageGte = $request->query->get('vote_average_gte', 0);
         $voteCountGte = $request->query->get('vote_count_gte', 0);
         $withRuntimeGte = $request->query->get('with_runtime_gte', 0);
         // $withGenres = $request->query->get('with_genres', null);
 
-        // dd($voteAverageGte);
         // Appel API TMDB pour récupérer les films de la page spécifiée
         $responseAllMovies = $this->httpClient->request('GET', "https://api.themoviedb.org/3/discover/movie", [
             'query' => [
                 'api_key' => $tmdbApiKey,
                 'sort_by' => $sortBy,
                 'page' => $page,
+                'include_adult' => $includeAdult,
                 'vote_average.gte' => $voteAverageGte,
                 'vote_count.gte' => $voteCountGte,
                 'with_runtime.gte' => $withRuntimeGte,

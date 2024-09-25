@@ -1,19 +1,22 @@
 <template>
-  <div id="sideBar" class="col-12 col-xl-3 col-xxl-2 py-3 text-light">
+  <form
+    @submit.prevent="submitForm"
+    id="sideBar"
+    class="col-12 col-xl-3 col-xxl-2 py-3 text-light"
+  >
     <div class="card">
       <div
+        @click="eventOpenTri"
         class="card-header d-flex justify-content-between align-items-center"
       >
         <div class="fw-bold">Trier</div>
+        <i class="fa-solid fa-chevron-down"></i>
       </div>
 
-      <div>
-        <select @change="filterMovies" v-model="select" class="form-select">
-          <option
-            v-for="option in options"
-            :key="option.value"
-            :value="option.value"
-          >
+      <div v-show="openTri">
+        <select v-model="selected" class="form-select">
+          <option disabled value="">Sélectionner</option>
+          <option v-for="option in options" :value="option.value">
             {{ option.text }}
           </option>
         </select>
@@ -21,13 +24,13 @@
     </div>
     <div class="card mt-2">
       <div
-        @click="eventOpen"
+        @click="eventOpenFilter"
         class="card-header d-flex justify-content-between align-items-center"
       >
         <div class="fw-bold">Filtrer</div>
         <i class="fa-solid fa-chevron-down"></i>
       </div>
-      <form v-show="open" @submit.prevent="submitForm" class="p-3">
+      <div v-show="openFilter" class="p-3">
         <div>
           <div class="pb-2">Afficher</div>
           <ul class="list-unstyled ps-3">
@@ -56,7 +59,7 @@
           </ul>
         </div>
         <hr />
-        <div>
+        <!-- <div>
           <div class="pb-2">Genres</div>
           <ul class="list-unstyled row">
             <li
@@ -81,7 +84,7 @@
             </li>
           </ul>
         </div>
-        <hr />
+        <hr /> -->
         <div>
           <div>Notes</div>
           <div>
@@ -132,77 +135,86 @@
           </div>
         </div>
         <button type="submit" class="btn btn-primary">Filtrer</button>
-      </form>
+      </div>
     </div>
-  </div>
+  </form>
 </template>
 
 <script setup>
 import { ref } from "vue";
 
 // Data pour les options et les genres
-const select = ref(null);
-let open = ref(false);
+const selected = ref("");
+let openTri = ref(false);
+let openFilter = ref(true);
 let checkedRadio = ref("all");
 let note = ref("");
 let vote = ref("");
 let duration = ref("");
-let genreObject = ref({});
+// let genreObject = ref({});
 
-const eventOpen = () => {
-  open.value = !open.value;
+const eventOpenFilter = () => {
+  openFilter.value = !openFilter.value;
+};
+const eventOpenTri = () => {
+  openTri.value = !openTri.value;
 };
 
 const options = ref([
-  { text: "Popularité +/-", value: "?sort_by=popularity.desc" },
-  { text: "Popularité -/+", value: "?sort_by=popularity.asc" },
-  { text: "Evaluations +/-", value: "?sort_by=vote_average.desc" },
-  { text: "Evaluations -/+", value: "?sort_by=vote_average.asc" },
-  { text: "Date de sortie +/-", value: "?sort_by=primary_release_date.asc" },
-  { text: "Date de sortie -/+", value: "?sort_by=primary_release_date.desc" },
-  { text: "Titre A/Z", value: "?sort_by=original_title.asc" },
-  { text: "Titre Z/A", value: "?sort_by=original_title.desc" },
+  { text: "Popularité +/-", value: "popularity.desc" },
+  { text: "Popularité -/+", value: "popularity.asc" },
+  { text: "Evaluations +/-", value: "vote_average.desc" },
+  { text: "Evaluations -/+", value: "vote_average.asc" },
+  { text: "Date de sortie +/-", value: "primary_release_date.asc" },
+  { text: "Date de sortie -/+", value: "primary_release_date.desc" },
+  { text: "Titre A/Z", value: "original_title.asc" },
+  { text: "Titre Z/A", value: "original_title.desc" },
 ]);
 
-const genres = ref([
-  "Action",
-  "Comédie",
-  "Drame",
-  "Fantastique",
-  "Science-Fiction",
-  "Thriller",
-]);
+// const genres = ref([
+//   "Action",
+//   "Comédie",
+//   "Drame",
+//   "Fantastique",
+//   "Science-Fiction",
+//   "Thriller",
+// ]);
 
-const genrePush = (selectedGenre) => {
-  // Si le genre est déjà sélectionné, on le désélectionne
-  if (genreObject.value[selectedGenre]) {
-    delete genreObject.value[selectedGenre];
-  } else {
-    // Sinon, on le sélectionne
-    genreObject.value[selectedGenre] = true;
-  }
-  console.log(genreObject.value);
-};
+// const genrePush = (selectedGenre) => {
+//   // Si le genre est déjà sélectionné, on le désélectionne
+//   if (genreObject.value[selectedGenre]) {
+//     delete genreObject.value[selectedGenre];
+//   } else {
+//     // Sinon, on le sélectionne
+//     genreObject.value[selectedGenre] = true;
+//   }
+//   console.log(genreObject.value);
+// };
 
 const submitForm = (e) => {
   e.preventDefault();
 
-  const selectedGenres = Object.keys(genreObject.value).filter(
-    (key) => genreObject.value[key]
-  );
+  //   const selectedGenres = Object.keys(genreObject.value).filter(
+  //     (key) => genreObject.value[key]
+  //   );
 
-  const genreParam = selectedGenres ? `&with_genres=${selectedGenres}` : "";
+  //   const genreParam = selectedGenres ? `&with_genres=${selectedGenres}` : "";
+  selected.value !== ""
+    ? (selected.value = selected.value)
+    : (selected.value = "popularity.desc");
+  console.log(selected.value);
   vote.value !== "" ? (vote.value = "&vote_count.gte=" + vote.value) : "";
   note.value !== "" ? (note.value = "&vote_average.gte=" + note.value) : "";
   duration.value !== ""
     ? (duration.value = "&with_runtime.gte=" + duration.value)
     : "";
 
-  window.location.href = `/all/movies/1/?sort_by=popularity.desc${vote.value}${note.value}${duration.value}${genreParam}`;
+  window.location.href = `/all/movies/1/false?sort_by=${selected.value}${vote.value}${note.value}${duration.value}`;
 };
 
 // Fonction de filtrage des films
 const filterMovies = () => {
-  window.location.href = `/all/movies/1/${select.value}`;
+  //   console.log(selected.value);
+  window.location.href = `/all/movies/1/false/${selected.value}`;
 };
 </script>
