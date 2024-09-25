@@ -9,7 +9,11 @@
 
       <div>
         <select @change="filterMovies" v-model="select" class="form-select">
-          <option v-for="option in options" :value="option.value">
+          <option
+            v-for="option in options"
+            :key="option.value"
+            :value="option.value"
+          >
             {{ option.text }}
           </option>
         </select>
@@ -23,20 +27,20 @@
         <div class="fw-bold">Filtrer</div>
         <i class="fa-solid fa-chevron-down"></i>
       </div>
-      <form v-show="open" class="p-3">
+      <form v-show="open" @submit.prevent="submitForm" class="p-3">
         <div>
           <div class="pb-2">Afficher</div>
           <ul class="list-unstyled ps-3">
             <li>
-              <input type="radio" id="all" v-model="checkedFilters" value="1" />
+              <input type="radio" id="all" v-model="checkedRadio" value="all" />
               <label class="ps-2" for="all">Tous</label>
             </li>
             <li>
               <input
                 type="radio"
                 id="neverSeen"
-                v-model="checkedFilters"
-                value="2"
+                v-model="checkedRadio"
+                value="neverSeen"
               />
               <label class="ps-2" for="neverSeen">Jamais vus</label>
             </li>
@@ -44,8 +48,8 @@
               <input
                 type="radio"
                 id="alreadySeen"
-                v-model="checkedFilters"
-                value="3"
+                v-model="checkedRadio"
+                value="alreadySeen"
               />
               <label class="ps-2" for="alreadySeen">Déjà vus</label>
             </li>
@@ -55,16 +59,24 @@
         <div>
           <div class="pb-2">Genres</div>
           <ul class="list-unstyled row">
-            <li class="col-auto" v-for="genre in genres" :key="genre">
+            <li
+              @click="genrePush(genre)"
+              class="col-auto"
+              v-for="genre in genres"
+              :key="genre"
+            >
               <input
                 type="button"
-                class="btn mb-2 btn-outline-danger py-1"
+                :class="[
+                  'btn',
+                  'mb-2',
+                  'py-1',
+                  genreObject[genre]
+                    ? 'btn-outline-primary'
+                    : 'btn-outline-danger',
+                ]"
                 :value="genre"
-                style="
-                  background-color: #e5484d !important;
-                  color: white;
-                  font-size: 10px;
-                "
+                style="font-size: 10px"
               />
             </li>
           </ul>
@@ -80,6 +92,7 @@
               max="10"
               step="1"
               id="customRange3"
+              v-model="note"
             />
           </div>
           <div class="px-1 d-flex justify-content-between align-items-center">
@@ -99,6 +112,7 @@
               max="500"
               step="50"
               id="customRange3"
+              v-model="vote"
             />
           </div>
         </div>
@@ -113,6 +127,7 @@
               max="360"
               step="15"
               id="customRange3"
+              v-model="duration"
             />
           </div>
         </div>
@@ -128,6 +143,11 @@ import { ref } from "vue";
 // Data pour les options et les genres
 const select = ref(null);
 let open = ref(false);
+let checkedRadio = ref("all");
+let note = ref("");
+let vote = ref("");
+let duration = ref("");
+let genreObject = ref({});
 
 const eventOpen = () => {
   open.value = !open.value;
@@ -153,7 +173,33 @@ const genres = ref([
   "Thriller",
 ]);
 
-const checkedFilters = ref([]);
+const genrePush = (selectedGenre) => {
+  // Si le genre est déjà sélectionné, on le désélectionne
+  if (genreObject.value[selectedGenre]) {
+    delete genreObject.value[selectedGenre];
+  } else {
+    // Sinon, on le sélectionne
+    genreObject.value[selectedGenre] = true;
+  }
+  console.log(genreObject.value);
+};
+
+const submitForm = (e) => {
+  e.preventDefault();
+
+  const selectedGenres = Object.keys(genreObject.value).filter(
+    (key) => genreObject.value[key]
+  );
+
+  const genreParam = selectedGenres ? `&with_genres=${selectedGenres}` : "";
+  vote.value !== "" ? (vote.value = "&vote_count.gte=" + vote.value) : "";
+  note.value !== "" ? (note.value = "&vote_average.gte=" + note.value) : "";
+  duration.value !== ""
+    ? (duration.value = "&with_runtime.gte=" + duration.value)
+    : "";
+
+  window.location.href = `/all/movies/1/?sort_by=popularity.desc${vote.value}${note.value}${duration.value}${genreParam}`;
+};
 
 // Fonction de filtrage des films
 const filterMovies = () => {

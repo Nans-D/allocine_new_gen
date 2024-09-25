@@ -98,7 +98,6 @@
 import { ref, onMounted, computed } from "vue";
 import noImage from "/assets/images/no-image.png";
 import Sidebar from "./Sidebar.vue";
-
 // Références réactives pour les films, le nombre total de pages, la page actuelle, et la page personnalisée
 const films = ref([]);
 const pagesCount = ref(0);
